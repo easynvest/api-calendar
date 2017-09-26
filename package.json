@@ -7,7 +7,10 @@
   },
   "dependencies": {
     "express": "^4.15.5",
-    "redis": "^2.8.0"
+    "fast-csv": "^2.4.0",
+    "moment": "^2.18.1",
+    "redis": "^2.8.0",
+    "unirest": "^0.5.1"
   },
   "devDependencies": {
     "axios": "^0.16.2",
