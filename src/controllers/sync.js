@@ -5,7 +5,7 @@ const syncCalendar = require('../services/sync_calendar')
 const calendarRepository = require('../repositories/calendar')
 
 app.post('/', async (req, res) => {
-    const calendarData = await syncCalendar(req.redisClient)
+    const calendarData = await syncCalendar()
     res.send(calendarData)
 })
 
