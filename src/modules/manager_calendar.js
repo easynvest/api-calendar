@@ -11,20 +11,32 @@ const manager_calendar = {
     return data
   },
   businessDays: (fromDate, toDate) => {
-    let holiday = 1
+    let amountHoliday = manager_calendar.amountHolidays()
     let initialDate = moment(fromDate, 'YYYY/MM/DD').format('MM/DD/YYYY')
     let finishDate = moment(toDate, 'YYYY/MM/DD').format('MM/DD/YYYY')
     let amountWeekends = manager_calendar.amountWeekends(`${finishDate}`, `${initialDate}`)
+    let calcBusinessDays = moment(fromDate).diff(toDate, 'days') - (amountWeekends + amountHoliday)
 
-    return moment(fromDate).diff(toDate, 'days') - (amountWeekends + holiday)
+    if(calcBusinessDays === null || calcBusinessDays < 0) {
+      return 0
+    } else {
+      return calcBusinessDays
+    }
+    
   },
   amountWeekends: (fromDate,toDate ) => {
-    var d0 = new Date(fromDate)
-    var d1 = new Date(toDate)
+    let initialDate = new Date(fromDate)
+    let finishDate = new Date(toDate)
 
-    var ndays = 1 + Math.round((d1.getTime()-d0.getTime())/(24*3600*1000))
-    var nsaturdays = Math.floor((d0.getDay() + ndays) / 7)
-    return 2 * nsaturdays + (d0.getDay()==0) - (d1.getDay()==6)
+    let ndays = 1 + Math.round((finishDate.getTime()-initialDate.getTime())/(24*3600*1000))
+    let nsaturdays = Math.floor((initialDate.getDay() + ndays) / 7)
+
+    const weekends = 2 * nsaturdays + (initialDate.getDay()==0) - (finishDate.getDay()==6)
+
+    return weekends
+  },
+  amountHolidays: () => {
+    return 6
   }
 }
 
