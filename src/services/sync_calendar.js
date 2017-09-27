@@ -40,12 +40,19 @@ function parseRows(rows) {
 }
 
 async function sync(client) {
+    console.log('Starting....')
     const calendarData = await downloadFile()
     
+    console.log('Cleaning DB....')
     await CalendarRepository.cleanDB()
-    const parsedRows = parseRows(calendarData)
-    CalendarRepository.bulkInsert(parsedRows)
 
+    console.log('Parsing rows....')
+    const parsedRows = parseRows(calendarData)
+
+    console.log('Inserting rows....')
+    await CalendarRepository.bulkInsert(parsedRows)
+
+    console.log('Finished....')
     return parsedRows
 }
 
