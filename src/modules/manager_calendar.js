@@ -4,8 +4,8 @@ moment.locale('pt-BR')
 const manager_calendar = {
   calendarData: (req) => {
     const data = {
-      businessDays: manager_calendar.businessDays(req.to, req.from),
-      totalDays: moment(req.from).diff(req.to, 'days'),
+      businessDays: 200,
+      totalDays: moment(req.to).diff(req.from, 'days'),
       fromDate: req.from,
       toDate: req.to
     }
@@ -13,13 +13,7 @@ const manager_calendar = {
   },
   businessDays: (toDate, fromDate) => {
     let totalDays = moment(fromDate).diff(toDate, 'days')
-    return totalDays - manager_calendar.amountWeekends() - manager_calendar.amountHolidays()
-  },
-  amountHolidays: () => {
-    return 1
-  },
-  amountWeekends: () => {
-    return 2
+    //return totalDays - manager_calendar.amountWeekends(fromDate, toDate) - manager_calendar.amountHolidays(fromDate, toDate)
   }
 }
 
