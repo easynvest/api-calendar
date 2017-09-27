@@ -7,15 +7,13 @@
   },
   "dependencies": {
     "express": "^4.15.5",
-    "fast-csv": "^2.4.0",
     "moment": "^2.18.1",
     "redis": "^2.8.0",
-    "unirest": "^0.5.1"
+    "xlsx": "^0.11.4"
   },
   "devDependencies": {
     "axios": "^0.16.2",
-    "nodemon": "^1.12.1",
-    "response-time": "^2.3.2"
+    "nodemon": "^1.12.1"
   },
   "description": ""
 }
