@@ -1,44 +1,47 @@
-const csv = require('fast-csv')
 const moment = require('moment')
-const path = require('path')
-const fs = require('fs')
+const axios = require('axios')
+const xlsx = require('xlsx')
 
 const CalendarRepository = require('../repositories/calendar')
 
-const SHEET_PATH = path.resolve('feriados_nacionais.csv')
+const SHEET_URL = 'http://www.anbima.com.br/feriados/arqs/feriados_nacionais.xls'
 
-function readFile() {
-    return new Promise((resolve, reject) => {
-        fs.readFile(SHEET_PATH, (err, data) => {
-            try {
-                const rows = []
-                csv.fromString(data.toString(), {
-                    headers: true,
-                    delimiter: ';'
-                })
-                .on('data', row => rows.push(row))
-                .on('end', () => resolve(rows))
-            } catch (error) {
-                reject(err)
-            }
-        })
-    })
+async function downloadFile() {
+    const response = await axios(SHEET_URL, { responseType: 'arraybuffer' })
+    const data = new Uint8Array(response.data)
+    const wb = xlsx.read(data, { type: 'array' })
+    const sheet = wb.Sheets.Plan1
+
+    xlsx.SSF.parse_date_code()
+    return xlsx.utils.sheet_to_json(sheet)
 }
 
 function parseRows(rows) {
     const today = moment()
-    const updatedDates = rows
-        .map(row => ({ weekDay: row['Dia da Semana'], date: moment(row.Data, 'DD/MM/YY') }))
-        .filter(row => row.date > today)
-        .filter(row => ['sábado', 'domingo'].indexOf(row.weekDay) < 0)
-        .map(row => ({ weekDay: row.weekDay, date: row.date.format('DD/MM/YYYY') }))
 
-    return updatedDates
+    const filterValidRows = row => row['Dia da Semana'] && row.Data
+    const filterFutureHolidays = row => row.date > today
+    const filterWeekendDays = row => ['sábado', 'domingo'].indexOf(row.weekDay) < 0
+    
+    const parseFMT14DateToMoment = FMT14Date => {
+        const splittedDate = FMT14Date.split('/')
+        splittedDate[2] = `20${splittedDate[2]}`
+        return moment(new Date(splittedDate.join('/')))
+    }
+
+    const parseRow = row => ({ weekDay: row['Dia da Semana'], date: parseFMT14DateToMoment(row.Data) })
+    const flatRow = row => ({ weekDay: row.weekDay, date: row.date.format('DD/MM/YYYY') })
+
+    return rows
+        .filter(filterValidRows)
+        .map(parseRow)
+        .filter(row => filterFutureHolidays(row) && filterWeekendDays(row))
+        .map(flatRow)
 }
 
 async function sync(client) {
-    const calendarData = await readFile()
-
+    const calendarData = await downloadFile()
+    
     await CalendarRepository.cleanDB()
     const parsedRows = parseRows(calendarData)
     CalendarRepository.bulkInsert(parsedRows)
