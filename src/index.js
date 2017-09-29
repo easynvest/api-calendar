@@ -1,3 +1,4 @@
+require('dotenv').config()
 const app = require('express')()
 
 app.set('port', (process.env.PORT || 3000))
