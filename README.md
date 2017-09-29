@@ -4,6 +4,7 @@ O intuito desse projeto é consolidar informacões de dias úteis baseado na ANB
 
 ### Como usar
 ```
+cp .env.template .env # Altere com as respectivas configs
 npm install
 npm start
 ```
