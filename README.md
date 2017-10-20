@@ -6,7 +6,7 @@ O intuito desse projeto é consolidar informacões de dias úteis baseado na [AN
 
 ## Desenvolvendo
 
-### Built With
+### Construído com
 
 Lista das principais bibliotecas:
  * [axios](https://www.npmjs.com/package/axios)
@@ -36,10 +36,6 @@ redis-server
 npm start
 ```
 
-### Building
-
- * TODO
-
 ## 6. Estrutura
 
 ```
@@ -60,10 +56,6 @@ npm start
     |   ├── sync_calendar.js
 ```
 
-## Versionamento
-
- * TODO podemoriamos talvez usar [SemVer](http://semver.org/) para versionamento.
-
 
 ## Configuração
 
@@ -73,14 +65,6 @@ Editar o arquivo `.env` na raiz do projeto:
 REDIS_HOST=YOUR_REDIS_HOST_HERE
 REDIS_PORT=YOUR_REDIS_PORT_HERE
 ```
-
-## Tests
-
- * TODO
-
-## Style guide
-
- * TODO
 
 ## Referência de API
 
@@ -92,10 +76,10 @@ REDIS_PORT=YOUR_REDIS_PORT_HERE
 http://localhost:3000/calendar	
 ```
 
-## Database
+## Banco de Dados
 
 [Redis](https://www.Redis.com/)
 
-## Licensing
+## Licença
 
 [Apache License Version 2.0](./LICENSE)
